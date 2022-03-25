@@ -22,9 +22,23 @@ async function start() {
 /** Display board */
 
 function displayBoard(board) {
-  // $table.empty();
+  $table.empty();
   // loop over board and create the DOM tr/td structure
-}
 
+  for(let i = 0; i < board.length; i++){
+
+    const $row = $("<tr>")
+
+    for(let j = 0; j < board.length; j++){
+
+      const $cell = $("<td>")
+      $cell
+      .addClass(`${[i]}-${[j]}`)
+      .text(board[i][j])
+      $row.append($cell)
+    }
+    $table.append($row)
+  }
+}
 
 start();
