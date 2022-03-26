@@ -33,15 +33,12 @@ def check_word():
     """ Checks if word is legal """
 
     response = request.json
-    # print(response)
-    # breakpoint()
-    # print(game, "GAME")
-    # game = games["gameId"]
     game_key = response["gameId"]
     game = games[game_key]
+    word = response["word"].upper()
 
-    if game.is_word_in_word_list(response["word"]):
-        if game.check_word_on_board(response["word"]):
+    if game.is_word_in_word_list(word):
+        if game.check_word_on_board(word):
             return jsonify({"result": "ok"})
         else:
             return jsonify({"result": "not-on-board"})

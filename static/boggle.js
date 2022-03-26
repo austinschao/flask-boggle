@@ -16,6 +16,7 @@ async function start() {
   gameId = response.data.gameId;
   let board = response.data.board;
 
+
   displayBoard(board);
 }
 
@@ -23,22 +24,46 @@ async function start() {
 
 function displayBoard(board) {
   $table.empty();
-  // loop over board and create the DOM tr/td structure
 
   for(let i = 0; i < board.length; i++){
-
-    const $row = $("<tr>")
-
+    const $row = $("<tr>");
     for(let j = 0; j < board.length; j++){
+      const $cell = $("<td>");
 
-      const $cell = $("<td>")
-      $cell
-      .addClass(`${[i]}-${[j]}`)
-      .text(board[i][j])
-      $row.append($cell)
+      $cell.text(board[i][j]);
+      $row.append($cell);
+
     }
-    $table.append($row)
+    $table.append($row);
   }
 }
 
+/** Check if word is legal and return a response */
+
+async function submitWord(evt) {
+  evt.preventDefault();
+
+  const word = $wordInput.val().toUpperCase();
+  $wordInput.val("");
+
+  const resp = await axios({
+    method: "POST",
+    data: {
+      "word": word,
+      "gameId": gameId
+    },
+    url: "/api/score-word"
+  });
+
+  if (resp.data["result"] === "not-on-board") {
+    $message.text(`${word} IS NOT ON THE BOARD!`);
+  } else if (resp.data["result"] === "not-word") {
+    $message.text(`${word} IS NOT A WORD!`);
+  } else {
+    $message.text("NICE, YOU GOT A WORD!");
+    $playedWords.append($(`<p>${word}</p>`));
+  }
+}
+
+$form.on('submit', submitWord);
 start();
